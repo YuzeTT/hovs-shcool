@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鸿数引擎</title>
+  <!-- 导入样式 -->
+  <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
+  <!-- 导入 Vue 3 -->
+  <script src="//unpkg.com/vue@next"></script>
+  <!-- 导入组件库 -->
+  <script src="//unpkg.com/element-plus"></script>
+  <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div>
+      <el-container>
+        <el-header style="background-color: #FFFFFF;border-bottom: 1px solid #E4E7ED">
+          <h3 style="text-align: center;">HOVS · SCHOOL</h3>
+        </el-header>
+        <el-main>
+          <div style="max-width: 400px;margin: 0 auto;">
+            <el-card shadow="never" v-show="false">
+              <div style="text-align: center;padding-bottom: 5px;">控制中心</div>
+              <el-row style="padding-top: 5px;">
+                <el-col :span="12" style="line-height: 32px;">状态服务器</el-col>
+                <el-col :span="12" style="text-align: right;">
+                  <el-button type="danger">断开</el-button>
+                </el-col>
+              </el-row>
+              <el-row style="padding-top: 5px;">
+                <el-col :span="12" style="line-height: 32px;">主机A</el-col>
+                <el-col :span="12" style="text-align: right;">
+                  <el-button type="danger">断开</el-button>
+                </el-col>
+              </el-row>
+              <el-row style="padding-top: 5px;">
+                <el-col :span="12" style="line-height: 32px;">数据库</el-col>
+                <el-col :span="12" style="text-align: right;">
+                  <el-button type="danger">断开</el-button>
+                </el-col>
+              </el-row>
+            </el-card>
+            <el-card shadow="never">
+              <div style="display: flex;
+              flex-wrap: nowrap;
+              align-items: center;">
+                <el-avatar
+                  src="https://cdn.jsdelivr.net/gh/HexNavi/xl-img/img/202201270224862.png"
+                  shape="square" :size="35"
+                ></el-avatar>
+                <div style="font-size: 1.3rem;padding-left: 8px;">饶志伟</div>
+                <!-- <el-tag class="ml-2" type="success">Tag 2</el-tag> -->
+                <div style="padding-left: 15px;line-height: 1.3rem;vertical-align: middle;color: #909399;">班干部 · 长期有效</div>
+              </div>
+              <div style="padding: 8px 0;"></div>
+              <div>
+                <el-row>
+                  <el-col :span="8">
+                    <div class="card_label">班级ID</div>
+                    <div style="font-size: 1.5rem;color: #303133;">${data.class_id}</div>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="card_label">班级座号</div>
+                    <div style="font-size: 1.5rem;color: #303133;">${data.seat_num}</div>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="card_label">权限组</div>
+                    <div style="font-size: 1.5rem;color: #303133;">管理员</div>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+            <el-card shadow="never" style="margin-top: 10px;">
+              <div style="display: flex;
+              flex-wrap: nowrap;
+              align-items: center;">
+                <div style="font-size: 1.3rem;">作业概览</div>
+                <!-- <el-tag class="ml-2" type="success">Tag 2</el-tag> -->
+                <div style="padding-left: 15px;line-height: 1.3rem;vertical-align: middle;color: #909399;">寒假作业</div>
+              </div>
+              <div style="padding: 8px 0;"></div>
+              <div>
+                <el-row>
+                  <el-col :span="8">
+                    <div class="card_label">已完成</div>
+                    <div style="font-size: 1.5rem;color: #303133;">${data.homework_done_num} / ${data.homework_num}</div>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="card_label">剩余</div>
+                    <div style="font-size: 1.5rem;color: #F56C6C;">${data.homework_rema_num} 项</div>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="card_label">剩余时间</div>
+                    <div style="font-size: 1.5rem;color: #F56C6C;">6 天</div>
+                  </el-col>
+                </el-row>
+              </div>
+              <div style="padding: 8px 0;"></div>
+              <!-- <div style="font-size: 1.1rem;">已完成</div> -->
+              百分比${homework_done_b}
+              <el-progress :text-inside="true" :stroke-width="26" percentage="data.homework_done_b" status="warning" >
+                <span>已完成 32%</span>
+              </el-progress>
+              <div style="padding: 10px 0;"></div>
+              <div>
+                <el-table :data="tableData" style="width: 100%">
+                  <el-table-column prop="log" label="历史记录" />
+                </el-table>
+              </div>
+              <!-- <el-alert title="今日完成 2 题" type="success" show-icon effect="dark"> </el-alert> -->
+              <div style="padding: 10px 0;"></div>
+              <!-- <el-button plain>确认完成</el-button> -->
+              <!-- <el-space :size="10" style="display: flex;
+              flex-flow: row wrap;
+              justify-content: flex-end;">
+                <el-button plain  disabled>摆烂 (禁用)</el-button>
+                <el-badge :value="1" class="item">
+                  <el-button>确认完成</el-button>
+                </el-badge>
+              </el-space> -->
+              <div style="display: flex;
+              flex-flow: row wrap;
+              justify-content: flex-end;">
+                <el-button plain  disabled>摆烂 (禁用)</el-button>
+                <span style="padding: 0 5px;"></span>
+                <el-badge :value="17" class="item">
+                  <el-button>确认完成</el-button>
+                </el-badge>
+              </div>
+            </el-card>
+          </div>
+        </el-main>
+      </el-container>  
+    </div>
+  </div>
+
+  <script>
+    var Main = {
+      data() {
+        return {
+          activeName: 'console',
+          tableData: [
+            {
+              log: '<2022-02-09> 完成 3 项',
+            },
+            {
+              log: '<2022-02-10> 完成 2 项',
+            },
+          ],
+          data: {
+            student_num: 0,
+            class_id: 0,
+            seat_num: 0,
+            homework_num: 0,
+            homework_done_num: 0,
+            homework_done_b: 0,
+            homework_rema_num: 0,
+            homework_last_done_time: 0,
+          }
+        }
+      },
+      methods: {
+        // onsubmit(event) {
+        //   ws.send(this.msgForm.msg)
+        //   this.msgForm.msg = ""
+        // }
+      },
+      compilerOptions: {
+        delimiters: ['${', '}'],
+        comments: true
+      }
+    }
+    const app = Vue.createApp(Main);
+    app.use(ElementPlus);
+    v = app.mount('#app')
+
+    axios
+      .get(window.location.href+'api/get_homework')
+      .then(response = () => {
+        // this.data = Object.assign{},response.data
+        console.log(response)
+      })
+  </script>
+
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+      background-color: #FAFAFC;
+    }
+
+    .card_label {
+      color: #909399;
+      padding-bottom: 5px;
+    }
+  </style>
+</body>
+</html>
